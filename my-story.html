@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Letter From The Fellowship — Alpine Intelligence</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@200;300;400;600;700&display=swap');
+:root{--bg-deep:#0a0c10;--bg-surface:#0f1218;--bg-card:#151920;--accent-glacier:#3ee8e0;--accent-warm:#ff6b3d;--text-primary:#e8eaed;--text-secondary:#8b919a;--text-dim:#4a5060;--risk-red:#ff4757;--risk-amber:#ffa502;--risk-green:#2ed573}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:'Sora',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg-deep)}::-webkit-scrollbar-thumb{background:var(--accent-glacier);border-radius:2px}
+
+/* NAV — identical to main site */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(10,12,16,0.6);border-bottom:1px solid rgba(62,232,224,0.06);transition:all 0.4s}
+nav.scrolled{padding:1rem 3rem;background:rgba(10,12,16,0.9)}
+.nav-logo{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier);text-decoration:none}
+.nav-links{display:flex;gap:2.5rem}.nav-links a{font-size:0.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;transition:color 0.3s;font-weight:300}.nav-links a:hover{color:var(--accent-glacier)}
+.nav-story-link{color:var(--accent-glacier)!important;font-weight:400!important}
+
+/* LETTER LAYOUT */
+.letter-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10rem 2rem 6rem}
+
+.letter-envelope{max-width:740px;width:100%;position:relative}
+
+/* Decorative stamp */
+.letter-stamp{position:absolute;top:-2rem;right:2rem;width:70px;height:85px;border:2px solid rgba(62,232,224,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.2rem;transform:rotate(3deg);opacity:0;animation:stampIn 0.6s ease 0.8s forwards}
+.letter-stamp-icon{font-size:1.4rem}
+.letter-stamp-text{font-family:'JetBrains Mono',monospace;font-size:0.4rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent-glacier);text-align:center;line-height:1.3}
+@keyframes stampIn{from{opacity:0;transform:rotate(3deg) scale(0.8)}to{opacity:1;transform:rotate(3deg) scale(1)}}
+
+/* Postmark */
+.letter-postmark{position:absolute;top:0.5rem;right:6rem;font-family:'JetBrains Mono',monospace;font-size:0.5rem;letter-spacing:1.5px;color:var(--text-dim);text-transform:uppercase;opacity:0;animation:fadeUp 0.6s ease 1s forwards;transform:rotate(-5deg)}
+
+/* The letter itself */
+.letter-paper{background:var(--bg-card);border:1px solid rgba(62,232,224,0.06);padding:3.5rem 3rem;position:relative;overflow:hidden}
+.letter-paper::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent-glacier),var(--accent-warm),var(--accent-glacier));opacity:0.35}
+.letter-paper::after{content:'';position:absolute;top:3px;left:3rem;right:3rem;height:1px;background:repeating-linear-gradient(90deg,rgba(62,232,224,0.06) 0px,rgba(62,232,224,0.06) 4px,transparent 4px,transparent 8px)}
+
+/* Fold line */
+.letter-fold{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(62,232,224,0.04) 20%,rgba(62,232,224,0.04) 80%,transparent 95%);top:33%}
+.letter-fold-2{top:66%}
+
+/* Header area */
+.letter-from{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.3rem;opacity:0;animation:fadeUp 0.6s ease 0.3s forwards}
+.letter-date{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:1px;color:var(--text-dim);margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.6s ease 0.5s forwards}
+.letter-greeting{font-family:'Instrument Serif',serif;font-size:1.8rem;font-style:italic;color:var(--accent-glacier);margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.8s ease 0.7s forwards}
+
+/* Story paragraphs */
+.letter-body{display:flex;flex-direction:column;gap:1.6rem}
+.letter-p{font-size:0.9rem;color:var(--text-secondary);font-weight:200;line-height:2.1}
+
+/* Hover-reveal words */
+.hw{display:inline;color:transparent;background:rgba(62,232,224,0.05);border-radius:1px;padding:1px 3px;margin:0 1px;cursor:default;transition:color 0.45s ease,background 0.35s ease;position:relative}
+.hw::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--accent-glacier);transform:scaleX(0);transition:transform 0.3s ease;transform-origin:left}
+.hw:hover,.hw.revealed{color:var(--text-secondary);background:transparent}
+.hw:hover::after{transform:scaleX(1)}
+.hw.a:hover,.hw.a.revealed{color:var(--accent-glacier)}
+.hw.w:hover,.hw.w.revealed{color:var(--accent-warm)}
+.hw.s:hover,.hw.s.revealed{color:var(--text-primary);font-weight:300}
+
+/* Signature */
+.letter-closing{margin-top:2.5rem;opacity:0;animation:fadeUp 0.6s ease 1.2s forwards}
+.letter-closing-text{font-family:'Instrument Serif',serif;font-size:1.1rem;font-style:italic;color:var(--text-primary);margin-bottom:0.8rem}
+.letter-sig{font-family:'Instrument Serif',serif;font-size:1.5rem;font-style:italic;color:var(--accent-glacier);margin-bottom:0.2rem}
+.letter-sig-title{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+
+/* PS note */
+.letter-ps{margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(62,232,224,0.06);font-size:0.78rem;color:var(--text-dim);font-weight:200;line-height:1.8;font-style:italic;opacity:0;animation:fadeUp 0.6s ease 1.5s forwards}
+.letter-ps strong{color:var(--text-secondary);font-weight:300}
+
+/* Progress / hint bar at bottom */
+.letter-controls{max-width:740px;width:100%;margin-top:2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
+
+.letter-hint{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase;display:flex;align-items:center;gap:0.5rem;animation:hintPulse 3s ease infinite}
+.hint-cursor{display:inline-block;width:14px;height:14px;border:1.5px solid var(--accent-glacier);border-radius:50%;position:relative;animation:cursorBounce 2s ease infinite}
+.hint-cursor::after{content:'';position:absolute;top:2px;left:2px;width:6px;height:6px;background:var(--accent-glacier);border-radius:50%;opacity:0.5}
+
+.letter-progress-wrap{display:flex;align-items:center;gap:0.8rem;flex:1;max-width:350px}
+.letter-progress{flex:1;height:3px;background:var(--bg-card);border-radius:2px;overflow:hidden}
+.letter-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent-glacier),var(--accent-warm));border-radius:2px;transition:width 0.3s ease}
+.letter-progress-pct{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text-dim);letter-spacing:1px;min-width:3rem;text-align:right}
+
+.letter-reveal-btn{padding:0.55rem 1.2rem;border:1px solid rgba(62,232,224,0.2);color:var(--accent-glacier);background:transparent;font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.4s;position:relative;overflow:hidden}
+.letter-reveal-btn::before{content:'';position:absolute;inset:0;background:var(--accent-glacier);transform:translateX(-101%);transition:transform 0.4s}
+.letter-reveal-btn:hover::before{transform:translateX(0)}
+.letter-reveal-btn:hover{color:var(--bg-deep)}
+.letter-reveal-btn span{position:relative;z-index:1}
+
+/* Back link */
+.letter-back{max-width:740px;width:100%;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(62,232,224,0.06);display:flex;justify-content:space-between;align-items:center}
+.letter-back a{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);text-decoration:none;transition:color 0.3s;display:flex;align-items:center;gap:0.5rem}
+.letter-back a:hover{color:var(--accent-glacier)}
+.letter-back-tagline{font-family:'Instrument Serif',serif;font-size:0.9rem;font-style:italic;color:var(--text-secondary)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes hintPulse{0%,100%{opacity:0.3}50%{opacity:0.8}}
+@keyframes cursorBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+@media(max-width:700px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{display:none}
+  .letter-page{padding:7rem 1rem 4rem}
+  .letter-paper{padding:2rem 1.5rem}
+  .letter-stamp{display:none}
+  .letter-postmark{display:none}
+  .letter-greeting{font-size:1.4rem}
+  .letter-controls{flex-direction:column;align-items:flex-start}
+  .letter-progress-wrap{max-width:100%;width:100%}
+  .hw{background:rgba(62,232,224,0.08)}
+}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <a href="index.html" class="nav-logo">André Ramolivaz</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-story-link">Home</a>
+  </div>
+</nav>
+
+<main class="letter-page">
+  <div class="letter-envelope">
+
+  
+    <div class="letter-postmark">Aosta → Venice → Frankfurt → Milan → Los Angeles</div>
+
+    <div class="letter-paper">
+      <div class="letter-fold"></div>
+      <div class="letter-fold letter-fold-2"></div>
+
+      <div class="letter-from">From the desk of a scholarship that shouldn't be talking</div>
+      <div class="letter-date">Spring 2026 · Somewhere between a glacier and a spreadsheet</div>
+
+      <div class="letter-greeting">Dear curious stranger,</div>
+
+      <div class="letter-body" id="letterBody"></div>
+
+      <div class="letter-closing">
+        <div class="letter-closing-text">With stubborn optimism and a slight chill,</div>
+        <div class="letter-sig">The Alpine Intelligence Fellowship</div>
+        <div class="letter-sig-title">Born from glaciers, data &amp; stubbornness · Est. 2026</div>
+      </div>
+
+      <div class="letter-ps">
+        <strong>P.S.</strong> — If you've revealed every word on this page, you're either extremely thorough or extremely procrastinating. Either way, I respect it. Now go play with the <a href="index.html#risk-engine" style="color:var(--accent-glacier)">Risk Engine</a> — those sliders won't move themselves.
+      </div>
+    </div>
+  </div>
+
+  <div class="letter-controls">
+    <div class="letter-hint"><span class="hint-cursor"></span> Hover to reveal my words</div>
+    <div class="letter-progress-wrap">
+      <div class="letter-progress"><div class="letter-progress-fill" id="progressFill"></div></div>
+      <div class="letter-progress-pct" id="progressPct">0%</div>
+    </div>
+    <button class="letter-reveal-btn" id="revealBtn"><span>Reveal all</span></button>
+  </div>
+
+  <div class="letter-back">
+    <a href="index.html">← Back to the main site</a>
+    <div class="letter-back-tagline">From glaciers to global markets</div>
+  </div>
+</main>
+
+<script>
+// NAV scroll
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+// STORY DATA — the fellowship speaks in first person
+const story = [
+  // Para 1 — the hook
+  [
+    {t:"I know this is unusual.", c:"a"},
+    {t:"Scholarships don't usually talk."},
+    {t:"We sit quietly in brochures, looking respectable, listing eligibility criteria, waiting politely for someone to apply."},
+    {t:"But André built me differently.", c:"w"},
+    {t:"He gave me a voice — and honestly?", c:"a"},
+    {t:"I have opinions."},
+  ],
+  // Para 2 — introduction
+  [
+    {t:"Let me introduce myself properly."},
+    {t:"My full name is the Alpine Intelligence Fellowship.", c:"a"},
+    {t:"I was conceived in the shadow of Mont Blanc, in a small town called Aosta, where the glacier shrinks every summer and the young people leave every autumn."},
+    {t:"My DNA is part economics — Ca' Foscari, Venice —"},
+    {t:"part systemic risk — the ECB, Frankfurt —"},
+    {t:"part corporate strategy — PwC, Milan —"},
+    {t:"and part artificial intelligence — USC, Los Angeles.", c:"a"},
+    {t:"Quite the pedigree for someone who doesn't technically exist yet.", c:"w"},
+  ],
+  // Para 3 — what I fund
+  [
+    {t:"Here's what I know about myself:", c:"a"},
+    {t:"I fund Master's and PhD programs — up to €40,000 a year — for students from Italian mountain communities who want to study AI, climate science, and risk engineering."},
+    {t:"I pay for field research: drones over glaciers, sensors in riverbeds, LiDAR scanning unstable slopes."},
+    {t:"I seed Community Data Labs — open-source climate dashboards that mayors can actually read."},
+    {t:"And here's the part I'm most proud of:", c:"s"},
+    {t:"I make my fellows come home.", c:"a"},
+    {t:"Twelve months. Back in their valley. Building the tools they learned to build.", c:"w"},
+    {t:"No escaping to Milan."},
+  ],
+  // Para 4 — why I care
+  [
+    {t:"Why do I care so much?", c:"a"},
+    {t:"Because 150 million cubic meters of water have already vanished from the Rutor glacier."},
+    {t:"Because ski seasons are 34 days shorter than they used to be."},
+    {t:"Because Italy spends €2.1 billion every year repairing damage from hydrogeological disasters,"},
+    {t:"and mountain communities bear the worst of it."},
+    {t:"Because the people who understand these mountains best — who grew up hearing rockfall in their sleep —", c:"s"},
+    {t:"are leaving, and they're not coming back.", c:"w"},
+  ],
+  // Para 5 — the bridge
+  [
+    {t:"Unless someone builds a bridge.", c:"a"},
+    {t:"That's me.", c:"a"},
+    {t:"I'm the bridge.", c:"w"},
+  ],
+  // Para 6 — the system
+  [
+    {t:"I'm not a traditional scholarship."},
+    {t:"I don't just pay tuition and wish you luck."},
+    {t:"I'm an entire system: training, fieldwork, community labs, and a mandatory return program.", c:"s"},
+    {t:"I connect every slider in that Risk Engine on the main site to a real curriculum —"},
+    {t:"Machine Learning for early warnings,"},
+    {t:"Financial Risk Modeling for economic resilience,"},
+    {t:"Geospatial AI for glacier monitoring,"},
+    {t:"Sustainable Tourism to save dying economies.", c:"a"},
+    {t:"Every variable you can move on that simulator?", c:"w"},
+    {t:"I train someone to fix it."},
+  ],
+  // Para 7 — André's journey
+  [
+    {t:"My creator, André, grew up watching his classmates leave Aosta one by one."},
+    {t:"He studied in Venice — a city that is itself sinking."},
+    {t:"He worked at the European Central Bank, where they stress-test entire financial systems."},
+    {t:"He consulted at PwC, where uncertainty gets a price tag."},
+    {t:"Now he's at USC, learning to build AI systems that can predict the unpredictable.", c:"a"},
+    {t:"And somehow, between all of that, he found time to give me a personality.", c:"w"},
+    {t:"I appreciate that."},
+  ],
+  // Para 8 — who should apply
+  [
+    {t:"I'm looking for a very specific kind of person:", c:"a"},
+    {t:"Someone from an Italian mountain community — Valle d'Aosta, Trentino, the Apennines, inland Sardinia, Calabria, Friuli —"},
+    {t:"who has the brains for a rigorous quantitative program,"},
+    {t:"the roots to understand their community from the inside,", c:"s"},
+    {t:"and the stubbornness to come back and build something.", c:"w"},
+    {t:"Impact potential counts for 40% of my selection criteria."},
+    {t:"Rootedness counts for 20%."},
+    {t:"I don't want tourists. I want builders.", c:"a"},
+  ],
+  // Para 9 — closing
+  [
+    {t:"If you've hovered this far, you're either very patient or very curious."},
+    {t:"Either way, I like you.", c:"a"},
+    {t:"The mountains don't need people who left and forgot.", c:"s"},
+    {t:"They need people who left, learned, and came back with tools.", c:"w"},
+    {t:"That's my founding principle."},
+    {t:"That's my whole reason for being."},
+  ],
+  // Para 10 — sign-off
+  [
+    {t:"So here I am.", c:"a"},
+    {t:"A scholarship that talks."},
+    {t:"A fellowship that demands you return."},
+    {t:"A bridge between glaciers and algorithms.", c:"w"},
+    {t:"Nice to meet you.", c:"a"},
+  ],
+];
+
+// BUILD
+const body = document.getElementById('letterBody');
+const progressFill = document.getElementById('progressFill');
+const progressPct = document.getElementById('progressPct');
+const allSpans = [];
+let revealed = 0, total = 0;
+
+story.forEach(para => {
+  const p = document.createElement('p');
+  p.className = 'letter-p';
+  para.forEach(item => {
+    const span = document.createElement('span');
+    span.className = 'hw' + (item.c ? ' ' + item.c : '');
+    span.textContent = item.t;
+    allSpans.push(span);
+    total++;
+
+    span.addEventListener('mouseenter', function() {
+      if (!this.classList.contains('revealed')) {
+        this.classList.add('revealed');
+        revealed++;
+        updateProgress();
+      }
+    });
+
+    p.appendChild(span);
+    p.appendChild(document.createTextNode(' '));
+  });
+  body.appendChild(p);
+});
+
+function updateProgress() {
+  const pct = Math.round((revealed / total) * 100);
+  progressFill.style.width = pct + '%';
+  progressPct.textContent = pct + '%';
+  if (pct === 100) {
+    progressPct.textContent = '100% ✦';
+    progressPct.style.color = 'var(--accent-glacier)';
+  }
+}
+
+// Reveal all
+document.getElementById('revealBtn').addEventListener('click', () => {
+  allSpans.forEach((span, i) => {
+    setTimeout(() => {
+      if (!span.classList.contains('revealed')) {
+        span.classList.add('revealed');
+        revealed++;
+        updateProgress();
+      }
+    }, i * 25);
+  });
+});
+
+// Touch support
+body.addEventListener('touchstart', e => {
+  const t = e.target.closest('.hw');
+  if (t && !t.classList.contains('revealed')) {
+    t.classList.add('revealed');
+    revealed++;
+    updateProgress();
+  }
+}, {passive: true});
+</script>
+</body>
+</html>

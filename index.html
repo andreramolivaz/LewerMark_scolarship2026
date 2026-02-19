@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Climate Intelligence & Risk Resilience</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&family=Sora:wght@200;300;400;600;700&display=swap');
+:root{--bg-deep:#0a0c10;--bg-surface:#0f1218;--bg-card:#151920;--accent-glacier:#3ee8e0;--accent-warm:#ff6b3d;--text-primary:#e8eaed;--text-secondary:#8b919a;--text-dim:#4a5060;--risk-red:#ff4757;--risk-amber:#ffa502;--risk-green:#2ed573}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:'Sora',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg-deep)}::-webkit-scrollbar-thumb{background:var(--accent-glacier);border-radius:2px}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(10,12,16,0.6);border-bottom:1px solid rgba(62,232,224,0.06);transition:all 0.4s}
+nav.scrolled{padding:1rem 3rem;background:rgba(10,12,16,0.9)}
+.nav-logo{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier)}
+.nav-links{display:flex;gap:2.5rem}.nav-links a{font-size:0.75rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);text-decoration:none;transition:color 0.3s;font-weight:300}.nav-links a:hover{color:var(--accent-glacier)}
+
+#hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;z-index:1}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:900px;padding:0 2rem}
+.hero-tag{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:2rem;opacity:0;animation:fadeUp 1s ease 0.5s forwards}
+.hero-title{font-family:'Instrument Serif',serif;font-size:clamp(2.8rem,6vw,5.5rem);line-height:1.05;font-weight:400;margin-bottom:1.8rem;opacity:0;animation:fadeUp 1s ease 0.8s forwards}
+.hero-title em{font-style:italic;color:var(--accent-glacier);position:relative}
+.hero-title em::after{content:'';position:absolute;bottom:4px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent-glacier),transparent)}
+.hero-subtitle{font-size:1.05rem;color:var(--text-secondary);font-weight:200;line-height:1.8;max-width:600px;margin:0 auto 3rem;opacity:0;animation:fadeUp 1s ease 1.1s forwards}
+.hero-cta{display:inline-flex;align-items:center;gap:0.8rem;padding:1rem 2.5rem;border:1px solid var(--accent-glacier);color:var(--accent-glacier);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:2px;text-transform:uppercase;transition:all 0.4s;opacity:0;animation:fadeUp 1s ease 1.4s forwards;position:relative;overflow:hidden}
+.hero-cta::before{content:'';position:absolute;inset:0;background:var(--accent-glacier);transform:translateX(-101%);transition:transform 0.4s}
+.hero-cta:hover::before{transform:translateX(0)}.hero-cta:hover{color:var(--bg-deep)}
+.hero-cta span,.hero-cta svg{position:relative;z-index:1}.hero-cta svg{transition:transform 0.3s}.hero-cta:hover svg{transform:translateX(4px)}
+.hero-author{font-size:0.8rem;color:var(--text-secondary);font-weight:200;margin-bottom:2.5rem;line-height:1.7;opacity:0;animation:fadeUp 1s ease 1.2s forwards}
+.hero-author strong{color:var(--text-primary);font-weight:400}
+.hero-contact{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.5px;color:var(--text-dim)}
+.hero-contest{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:1px;color:var(--accent-glacier);opacity:0.6;text-transform:uppercase}
+.hero-scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0;animation:fadeUp 1s ease 1.8s forwards}
+.hero-scroll-hint span{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim)}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--accent-glacier),transparent);animation:scrollPulse 2s ease infinite}
+
+section{position:relative}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:4px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:1rem}
+.section-title{font-family:'Instrument Serif',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:400;line-height:1.15;margin-bottom:1.5rem}
+.section-desc{font-size:0.95rem;color:var(--text-secondary);font-weight:200;line-height:1.8;max-width:650px}
+
+#statement{padding:8rem 3rem;display:flex;justify-content:center;border-top:1px solid rgba(62,232,224,0.06);background:linear-gradient(180deg,var(--bg-deep),var(--bg-surface))}
+.statement-inner{max-width:800px;text-align:center}
+.statement-quote{font-family:'Instrument Serif',serif;font-size:clamp(1.3rem,2.5vw,1.7rem);font-style:italic;line-height:1.7;color:var(--text-primary);position:relative;padding:2rem 0}
+.statement-quote::before{content:'\201C';position:absolute;top:-1rem;left:50%;transform:translateX(-50%);font-size:6rem;color:var(--accent-glacier);opacity:0.15;font-family:'Instrument Serif',serif}
+.statement-divider{width:60px;height:1px;background:var(--accent-glacier);margin:2rem auto}
+.statement-concept{font-family:'JetBrains Mono',monospace;font-size:0.7rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+
+#risk-engine{padding:8rem 3rem;background:var(--bg-surface)}
+.risk-engine-inner{max-width:1200px;margin:0 auto}
+.risk-header{margin-bottom:2rem}
+.risk-intro-text{font-size:0.9rem;color:var(--text-secondary);font-weight:200;line-height:1.9;max-width:700px;margin-bottom:3rem}
+.risk-intro-text strong{color:var(--text-primary);font-weight:400}
+
+.risk-grid{display:flex;flex-direction:column;gap:2.5rem}
+.risk-controls{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.risk-slider-group{background:var(--bg-card);padding:1.3rem 1.5rem;border:1px solid rgba(62,232,224,0.08);border-radius:2px}
+.slider-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem}
+.slider-name{font-size:0.85rem;color:var(--text-primary);font-weight:300}
+.slider-value{font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--accent-glacier);font-weight:500}
+.slider-explain{font-size:0.7rem;color:var(--text-dim);font-weight:200;line-height:1.5;margin-bottom:0.8rem}
+input[type="range"]{-webkit-appearance:none;width:100%;height:3px;background:var(--bg-deep);outline:none;border-radius:2px}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent-glacier);cursor:pointer;box-shadow:0 0 15px rgba(62,232,224,0.4);transition:transform 0.2s}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+.risk-outputs{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+.risk-simulation-wrap{grid-column:1/-1}
+.risk-card-out{background:var(--bg-card);border:1px solid rgba(62,232,224,0.08);border-radius:2px;padding:1.5rem 1.8rem;transition:border-color 0.3s}
+.risk-card-out.danger{border-color:rgba(255,71,87,0.25)}.risk-card-out.warning{border-color:rgba(255,165,2,0.25)}.risk-card-out.safe{border-color:rgba(46,213,115,0.25)}
+.risk-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.6rem}
+.risk-card-title{font-size:0.9rem;color:var(--text-primary);font-weight:400}
+.risk-card-number{font-family:'JetBrains Mono',monospace;font-size:1.8rem;font-weight:500;transition:color 0.4s;line-height:1}
+.risk-card-explain{font-size:0.75rem;color:var(--text-secondary);font-weight:200;line-height:1.6;margin-bottom:0.8rem}
+.risk-card-meaning{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:1px;text-transform:uppercase;padding:0.4rem 0.8rem;border-radius:2px;display:inline-block;transition:all 0.3s}
+.risk-card-meaning.red{background:rgba(255,71,87,0.12);color:var(--risk-red)}.risk-card-meaning.amber{background:rgba(255,165,2,0.12);color:var(--risk-amber)}.risk-card-meaning.green{background:rgba(46,213,115,0.12);color:var(--risk-green)}
+.risk-bar-track{width:100%;height:4px;background:var(--bg-deep);border-radius:2px;overflow:hidden;margin-top:0.8rem}
+.risk-bar-fill{height:100%;border-radius:2px;transition:width 0.5s ease,background 0.3s}
+.risk-simulation-wrap{background:var(--bg-card);border:1px solid rgba(62,232,224,0.08);border-radius:2px;padding:1.5rem 1.8rem}
+.sim-title{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim)}
+.sim-explain{font-size:0.72rem;color:var(--text-dim);font-weight:200;line-height:1.5;margin:0.4rem 0 1rem}
+.risk-canvas-wrap{height:200px;position:relative}#riskCanvas{width:100%;height:100%}
+
+.glacier-compare{margin-bottom:3rem}
+.glacier-compare-header{margin-bottom:1.5rem}
+.glacier-compare-title{font-family:'Instrument Serif',serif;font-size:clamp(1.4rem,2.5vw,2rem);font-weight:400;margin-bottom:0.6rem}
+.glacier-compare-desc{font-size:0.8rem;color:var(--text-secondary);font-weight:200;line-height:1.7;max-width:600px}
+.glacier-panels{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.glacier-panel{background:var(--bg-card);border:1px solid rgba(62,232,224,0.08);border-radius:2px;overflow:hidden;position:relative}
+.glacier-panel canvas{width:100%;height:280px;display:block;cursor:grab}
+.glacier-panel canvas:active{cursor:grabbing}
+.glacier-panel-label{padding:1rem 1.2rem;border-top:1px solid rgba(62,232,224,0.06)}
+.glacier-panel-year{font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:1.5px;color:var(--accent-glacier);margin-bottom:0.2rem}
+.glacier-panel-year.future{color:var(--risk-amber)}
+.glacier-panel-data{font-size:0.7rem;color:var(--text-dim);font-weight:200}
+
+.data-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-bottom:3.5rem}
+.data-metric-card{background:var(--bg-card);border:1px solid rgba(62,232,224,0.06);padding:1.5rem;border-radius:2px;transition:border-color 0.3s,transform 0.3s}
+.data-metric-card:hover{border-color:rgba(62,232,224,0.2);transform:translateY(-2px)}
+.data-metric-icon{font-size:1.3rem;margin-bottom:0.6rem}
+.data-metric-number{font-family:'JetBrains Mono',monospace;font-size:1.6rem;font-weight:500;color:var(--accent-glacier);margin-bottom:0.3rem;line-height:1.2}
+.data-metric-title{font-size:0.8rem;font-weight:500;margin-bottom:0.4rem;color:var(--text-primary)}
+.data-metric-desc{font-size:0.68rem;color:var(--text-dim);font-weight:200;line-height:1.6}
+
+.sim-section-title{font-family:'Instrument Serif',serif;font-size:1.5rem;font-weight:400;margin-bottom:0.5rem}
+.sim-section-desc{font-size:0.85rem;color:var(--text-secondary);font-weight:200;line-height:1.7;max-width:600px;margin-bottom:2.5rem}
+
+#scholarship{padding:8rem 3rem;background:var(--bg-deep);border-top:1px solid rgba(62,232,224,0.06)}
+.scholarship-inner{max-width:1100px;margin:0 auto}.scholarship-header{margin-bottom:2rem}
+.scholarship-card{background:var(--bg-card);border:1px solid rgba(62,232,224,0.06);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s}
+.scholarship-card:hover{border-color:rgba(62,232,224,0.2);transform:translateY(-3px)}
+.scholarship-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent-glacier),transparent);opacity:0;transition:opacity 0.3s}
+.scholarship-card:hover::before{opacity:1}
+.card-icon{font-size:1.8rem;margin-bottom:1.2rem}.card-title{font-size:1rem;font-weight:600;margin-bottom:0.8rem}
+.card-desc{font-size:0.8rem;color:var(--text-secondary);line-height:1.7;font-weight:200}
+.eligibility-section{background:var(--bg-card);border:1px solid rgba(62,232,224,0.08);padding:3rem;display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+.eligibility-title{font-family:'Instrument Serif',serif;font-size:1.8rem;margin-bottom:1.5rem}
+.eligibility-list{display:flex;flex-direction:column;gap:1rem}
+.eligibility-item{display:flex;align-items:flex-start;gap:0.8rem;font-size:0.85rem;color:var(--text-secondary);font-weight:200;line-height:1.6}
+.eligibility-dot{width:6px;height:6px;background:var(--accent-glacier);border-radius:50%;flex-shrink:0;margin-top:0.5rem}
+
+.fellowship-narrative{max-width:750px;margin-bottom:3.5rem}
+.fellowship-narrative-lead{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:1.2rem}
+.fellowship-narrative p{font-size:0.88rem;color:var(--text-secondary);font-weight:200;line-height:1.9;margin-bottom:1rem}
+.fellowship-narrative p strong{color:var(--text-primary);font-weight:400}
+
+.fellowship-section-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:1.5rem}
+
+.scholarship-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:3.5rem}
+.card-amount{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--accent-glacier);margin-bottom:0.6rem;letter-spacing:0.5px}
+
+.fellowship-curriculum{margin-bottom:3.5rem}
+.fellowship-curriculum-desc{font-size:0.85rem;color:var(--text-secondary);font-weight:200;line-height:1.7;max-width:600px;margin-bottom:2rem}
+.curriculum-grid{display:flex;flex-direction:column;gap:1px;background:rgba(62,232,224,0.06);border:1px solid rgba(62,232,224,0.08);border-radius:2px;overflow:hidden}
+.curriculum-item{display:flex;gap:1.5rem;padding:1.5rem 1.8rem;background:var(--bg-card);transition:background 0.3s}
+.curriculum-item:hover{background:rgba(21,25,32,0.95)}
+.curriculum-number{font-family:'JetBrains Mono',monospace;font-size:1.4rem;color:var(--text-dim);font-weight:300;min-width:2.5rem;line-height:1}
+.curriculum-content{flex:1}
+.curriculum-title{font-size:0.95rem;font-weight:500;margin-bottom:0.3rem;color:var(--text-primary)}
+.curriculum-link{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.5px;color:var(--accent-glacier);margin-bottom:0.5rem;opacity:0.7}
+.curriculum-desc{font-size:0.78rem;color:var(--text-secondary);font-weight:200;line-height:1.7}
+
+.eligibility-item strong{color:var(--text-primary);font-weight:400}
+
+.fellowship-vision{text-align:center;padding:4rem 2rem;margin-top:3.5rem;border-top:1px solid rgba(62,232,224,0.06);border-bottom:1px solid rgba(62,232,224,0.06)}
+.fellowship-vision-quote{font-family:'Instrument Serif',serif;font-size:clamp(1.1rem,2vw,1.5rem);font-style:italic;color:var(--text-primary);line-height:1.7;max-width:650px;margin:0 auto 1rem}
+.fellowship-vision-credit{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+
+#journey{padding:8rem 3rem;background:var(--bg-surface);border-top:1px solid rgba(62,232,224,0.06)}
+.journey-inner{max-width:1100px;margin:0 auto}.journey-header{margin-bottom:4rem}
+.journey-timeline{position:relative;padding:3rem 0}
+.timeline-line{position:absolute;top:50%;left:5%;right:5%;height:2px;background:linear-gradient(90deg,rgba(62,232,224,0.05),rgba(62,232,224,0.2) 20%,rgba(62,232,224,0.2) 80%,rgba(62,232,224,0.05));transform:translateY(-50%)}
+.timeline-line-glow{position:absolute;top:0;left:0;height:100%;width:0%;background:var(--accent-glacier);box-shadow:0 0 12px rgba(62,232,224,0.5);animation:lineGrow 3s ease 0.5s forwards}
+.timeline-stops{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;padding:0 2%}
+.timeline-stop{display:flex;flex-direction:column;align-items:center;cursor:pointer;flex:1;max-width:180px}
+.stop-top{display:flex;flex-direction:column;align-items:center;gap:0.4rem;margin-bottom:1rem;min-height:80px;justify-content:flex-end}
+.stop-year{font-family:'JetBrains Mono',monospace;font-size:0.55rem;letter-spacing:2px;color:var(--text-dim)}
+.stop-city{font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-secondary);text-align:center;white-space:nowrap}
+.stop-org{font-size:0.65rem;color:var(--text-dim);font-weight:200;text-align:center}
+.stop-dot-wrap{position:relative;width:18px;height:18px;display:flex;align-items:center;justify-content:center}
+.stop-dot{width:10px;height:10px;border-radius:50%;background:var(--bg-card);border:2px solid var(--accent-glacier);transition:all 0.3s;z-index:1;position:relative}
+.timeline-stop:hover .stop-dot,.timeline-stop.active .stop-dot{background:var(--accent-glacier);box-shadow:0 0 20px rgba(62,232,224,0.6);transform:scale(1.3)}
+.stop-dot-ping{position:absolute;inset:-3px;border-radius:50%;border:1px solid rgba(62,232,224,0.3);animation:pingDot 2.5s ease infinite}
+.stop-bottom{margin-top:1rem;min-height:70px;display:flex;flex-direction:column;align-items:center}
+.stop-keyword{font-family:'Instrument Serif',serif;font-size:1.3rem;font-style:italic;color:var(--accent-glacier);opacity:0;transform:translateY(-8px);transition:all 0.4s}
+.timeline-stop:hover .stop-keyword,.timeline-stop.active .stop-keyword{opacity:1;transform:translateY(0)}
+.stop-desc{font-size:0.7rem;color:var(--text-dim);font-weight:200;text-align:center;max-width:140px;line-height:1.5;opacity:0;transform:translateY(-5px);transition:all 0.4s ease 0.1s;margin-top:0.3rem}
+.timeline-stop:hover .stop-desc,.timeline-stop.active .stop-desc{opacity:1;transform:translateY(0)}
+.journey-final{text-align:center;margin-top:4rem}
+.journey-final-quote{font-family:'Instrument Serif',serif;font-size:clamp(1.2rem,2.2vw,1.6rem);font-style:italic;color:var(--text-primary);line-height:1.6}
+.journey-final-quote em{color:var(--accent-glacier);font-style:italic}
+
+footer{padding:4rem 3rem;border-top:1px solid rgba(62,232,224,0.06);background:var(--bg-deep)}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.footer-left{font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+.footer-tagline{font-family:'Instrument Serif',serif;font-size:0.95rem;font-style:italic;color:var(--text-secondary)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(0.6);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}
+@keyframes pingDot{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.8);opacity:0}}
+@keyframes lineGrow{from{width:0%}to{width:100%}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+
+@media(max-width:1000px){.risk-controls{grid-template-columns:1fr 1fr}.glacier-panels{grid-template-columns:1fr}.data-metrics{grid-template-columns:repeat(2,1fr)}.risk-outputs{grid-template-columns:1fr}}
+@media(max-width:900px){nav{padding:1rem 1.5rem}.nav-links{display:none}.scholarship-grid{grid-template-columns:1fr 1fr}.eligibility-section{grid-template-columns:1fr}#hero{padding:0 1rem}section{padding:5rem 1.5rem!important}.footer-inner{flex-direction:column;gap:1rem;text-align:center}
+.risk-controls{grid-template-columns:1fr}.data-metrics{grid-template-columns:1fr}
+.timeline-stops{flex-direction:column;gap:2.5rem;align-items:stretch;padding:0}.timeline-line{display:none}.timeline-stop{flex-direction:row;gap:1.2rem;max-width:100%}.stop-top{flex-direction:column;align-items:flex-start;min-height:auto;margin-bottom:0}.stop-bottom{margin-top:0;align-items:flex-start;min-height:auto}.stop-keyword,.stop-desc{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<nav id="mainNav"><div class="nav-logo">Andr&eacute; Ramolivaz</div><div class="nav-links"><a href="#risk-engine">Risk Engine</a><a href="my-story.html">Story ✦</a><a href="#scholarship">Fellowship</a><a href="#journey">Journey</a><a href="mailto:ramoliva@usc.edu">Contact</a></div></nav>
+
+<section id="hero">
+<canvas id="hero-canvas"></canvas>
+<div class="hero-content">
+<div class="hero-tag">Climate Intelligence &amp; Risk Resilience</div>
+<h1 class="hero-title">Risk is <em>invisible</em>.<br>Until it's too late.</h1>
+<p class="hero-subtitle">From glaciers to global markets &mdash; pricing climate risk before it's too late. An interactive system for understanding the fragility of mountain economies.</p>
+<div class="hero-author">by <strong>Andr&eacute; Ramolivaz</strong> &middot; USC Marshall School of Business<br><span class="hero-contact">ramoliva@usc.edu &middot; +1 (310) 866-0308</span><br><span class="hero-contest">Created for the LewerMark &ldquo;Make Your Mark&rdquo; Scholarship Contest &middot; Spring 2026</span></div>
+<a href="#risk-engine" class="hero-cta"><span>Explore the System</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+</div>
+<div class="hero-scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>
+</section>
+
+<section id="statement"><div class="statement-inner reveal"><div class="statement-quote">I chose to build an interactive system instead of a video because climate risk is not a story to watch &mdash; it is a system to understand.</div><div class="statement-divider"></div><div class="statement-concept">Design Philosophy</div></div></section>
+
+<section id="risk-engine"><div class="risk-engine-inner">
+<div class="risk-header reveal"><div class="section-label">02 &middot; Interactive Simulation</div><h2 class="section-title">What happens when<br>the mountain melts?</h2></div>
+<div class="risk-intro-text reveal">Mountain communities in the Alps and Apennines face a unique problem: their economy, safety, and identity are tied to a landscape that is rapidly changing. <strong>Glaciers are shrinking. Landslides are increasing. Young people are leaving.</strong> The Rutor glacier in Valle d'Aosta — one of the largest in the Italian Alps — has lost 150 million cubic meters of water equivalent since 2005. Its front has retreated 700 meters in 25 years. This simulator lets you explore how different factors interact to shape the future of these communities.</div>
+
+<!-- GLACIER 3D COMPARISON -->
+<div class="glacier-compare reveal">
+<div class="glacier-compare-header">
+<div class="section-label">Ghiacciaio del Rutor &middot; La Thuile, Valle d'Aosta</div>
+<h3 class="glacier-compare-title">The same mountain. Two different futures.</h3>
+<p class="glacier-compare-desc">Drag to rotate. These 3D models show how the Rutor glacier is projected to change based on current warming trends. The glacier's area shrank from 8.44 km² in 2005 to 7.58 km² in 2019 — and the retreat is accelerating.</p>
+</div>
+<div class="glacier-panels">
+<div class="glacier-panel">
+<canvas id="glacier3d-past"></canvas>
+<div class="glacier-panel-label">
+<div class="glacier-panel-year">~ 2005</div>
+<div class="glacier-panel-data">8.44 km² &middot; Full ice mass</div>
+</div>
+</div>
+<div class="glacier-panel">
+<canvas id="glacier3d-future"></canvas>
+<div class="glacier-panel-label">
+<div class="glacier-panel-year future">~ 2050 projected</div>
+<div class="glacier-panel-data">Estimated &lt;4 km² &middot; 150M m³ lost</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- REAL DATA METRICS -->
+<div class="data-metrics reveal">
+<div class="data-metric-card">
+<div class="data-metric-icon">🏔️</div>
+<div class="data-metric-number" id="glacierLoss">-18m</div>
+<div class="data-metric-title">Ice Thickness Lost</div>
+<div class="data-metric-desc">Meters of water equivalent lost on Rutor glacier between 2005–2023. That's an 18-story building of solid ice, gone.</div>
+</div>
+<div class="data-metric-card">
+<div class="data-metric-icon">💧</div>
+<div class="data-metric-number" id="waterLost">150M m³</div>
+<div class="data-metric-title">Water Reserve Lost</div>
+<div class="data-metric-desc">The Rutor has lost 150 million cubic meters of water — equivalent to the annual consumption of a city of 800,000 people.</div>
+</div>
+<div class="data-metric-card">
+<div class="data-metric-icon">⛷️</div>
+<div class="data-metric-number" id="skiDays">-34 days</div>
+<div class="data-metric-title">Shorter Ski Season</div>
+<div class="data-metric-desc">Alpine ski resorts below 1,500m have lost over a month of reliable snow cover since the 1970s. Tourism models are breaking.</div>
+</div>
+<div class="data-metric-card">
+<div class="data-metric-icon">🏚️</div>
+<div class="data-metric-number" id="infraCost">€2.1B</div>
+<div class="data-metric-title">Annual Damage Cost</div>
+<div class="data-metric-desc">Estimated yearly cost of hydrogeological disasters in Italy. Mountain regions bear a disproportionate share of this burden.</div>
+</div>
+<div class="data-metric-card">
+<div class="data-metric-icon">📉</div>
+<div class="data-metric-number" id="popDecline">-27%</div>
+<div class="data-metric-title">Snow Deficit</div>
+<div class="data-metric-desc">Valle d'Aosta's regional snow reserve deficit in 2024 vs. the 20-year average. The lower valley lost up to 60% of its snowpack.</div>
+</div>
+<div class="data-metric-card">
+<div class="data-metric-icon">⏱️</div>
+<div class="data-metric-number" id="meltSpeed">3x faster</div>
+<div class="data-metric-title">Melt Acceleration</div>
+<div class="data-metric-desc">In 2022, the Rutor lost 3,867mm of ice — nearly 4x the 2024 rate. The worst year ever recorded. Melt seasons now last 3 months instead of 1.</div>
+</div>
+</div>
+
+<h3 class="sim-section-title reveal">Interactive Risk Simulator</h3>
+<p class="sim-section-desc reveal">Now explore what happens when you change the variables. Move the sliders to see how temperature, tourism, investment, and education reshape the risk profile of a mountain community.</p>
+
+<div class="risk-grid">
+<div class="risk-controls reveal">
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">🌡️ Temperature Increase</span><span class="slider-value" id="tempVal">+1.5°C</span></div><div class="slider-explain">How much warmer than pre-industrial levels. Above +2°C, glacier loss accelerates dramatically.</div><input type="range" id="tempSlider" min="0" max="100" value="30"></div>
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">⛷️ Tourism Dependency</span><span class="slider-value" id="tourVal">40%</span></div><div class="slider-explain">How much the local economy depends on tourism. High dependency = high vulnerability when seasons shift.</div><input type="range" id="tourSlider" min="0" max="100" value="40"></div>
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">🏗️ Public Investment</span><span class="slider-value" id="investVal">€5.0M</span></div><div class="slider-explain">Annual investment in infrastructure and prevention. More investment = better prepared.</div><input type="range" id="investSlider" min="0" max="100" value="50"></div>
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">🎓 Local Education Level</span><span class="slider-value" id="eduVal">Medium</span></div><div class="slider-explain">Access to higher education and technical training. More skilled communities adapt faster.</div><input type="range" id="eduSlider" min="0" max="100" value="50"></div>
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">👴 Population Age</span><span class="slider-value" id="ageVal">Median 46</span></div><div class="slider-explain">Median age of the community. Older populations have fewer workers, less adaptability, and higher care needs during emergencies.</div><input type="range" id="ageSlider" min="0" max="100" value="50"></div>
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">🌐 Economic Diversification</span><span class="slider-value" id="divVal">Low</span></div><div class="slider-explain">How many different industries support the local economy. A town that only has tourism is fragile. One with tech, agriculture, energy, and crafts is resilient.</div><input type="range" id="divSlider" min="0" max="100" value="30"></div>
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">📡 Digital &amp; Monitoring Infrastructure</span><span class="slider-value" id="techVal">Basic</span></div><div class="slider-explain">Quality of sensors, broadband, weather stations, and early-warning systems. Better tech means faster response to landslides, floods, and emergencies.</div><input type="range" id="techSlider" min="0" max="100" value="40"></div>
+<div class="risk-slider-group"><div class="slider-header"><span class="slider-name">🌿 Forest &amp; Land Management</span><span class="slider-value" id="landVal">Moderate</span></div><div class="slider-explain">How well forests, slopes, and riverbanks are maintained. Good land management prevents erosion, stabilizes soil, and reduces flood damage naturally.</div><input type="range" id="landSlider" min="0" max="100" value="50"></div>
+</div>
+<div class="risk-outputs reveal">
+<div class="risk-card-out warning" id="card1"><div class="risk-card-header"><div><div class="risk-card-title">Economic Distress Probability</div></div><div class="risk-card-number" id="defaultProb">23%</div></div><div class="risk-card-explain" id="defaultExplain">There is roughly a 1 in 4 chance the local economy enters serious financial difficulty within the next 10 years.</div><div class="risk-card-meaning amber" id="defaultLabel">⚠ Moderate risk</div><div class="risk-bar-track"><div class="risk-bar-fill" id="defaultBar" style="width:23%;background:var(--risk-amber)"></div></div></div>
+<div class="risk-card-out warning" id="card2"><div class="risk-card-header"><div><div class="risk-card-title">Flood &amp; Landslide Risk</div></div><div class="risk-card-number" id="floodRisk">0.45</div></div><div class="risk-card-explain" id="floodExplain">The combined probability of dangerous flooding or landslides. Above 0.6, events become likely rather than rare.</div><div class="risk-card-meaning amber" id="floodLabel">⚠ Elevated</div><div class="risk-bar-track"><div class="risk-bar-fill" id="floodBar" style="width:45%;background:var(--risk-amber)"></div></div></div>
+<div class="risk-card-out safe" id="card3"><div class="risk-card-header"><div><div class="risk-card-title">Youth Migration Rate</div></div><div class="risk-card-number" id="migrationRate">-2.1</div></div><div class="risk-card-explain" id="migrationExplain">For every 1,000 residents, about 2 more people leave than arrive each year. The community is slowly shrinking.</div><div class="risk-card-meaning green" id="migrationLabel">● Stable decline</div><div class="risk-bar-track"><div class="risk-bar-fill" id="migrationBar" style="width:25%;background:var(--risk-green)"></div></div></div>
+<div class="risk-card-out warning" id="card4"><div class="risk-card-header"><div><div class="risk-card-title">Glacier Retreat Rate</div></div><div class="risk-card-number" id="glacierRetreat">26 m/yr</div></div><div class="risk-card-explain" id="glacierExplain">The glacier front is retreating about 26 meters per year. At this pace, lower-altitude ice tongues will disappear within two decades.</div><div class="risk-card-meaning amber" id="glacierLabel">⚠ Accelerating</div><div class="risk-bar-track"><div class="risk-bar-fill" id="glacierBar" style="width:40%;background:var(--risk-amber)"></div></div></div>
+<div class="risk-card-out warning" id="card5"><div class="risk-card-header"><div><div class="risk-card-title">Water Stress Index</div></div><div class="risk-card-number" id="waterStress">0.38</div></div><div class="risk-card-explain" id="waterExplain">The ratio between water demand and available supply from glacial melt + rainfall. Above 0.5, communities may face summer shortages.</div><div class="risk-card-meaning amber" id="waterLabel">⚠ Moderate stress</div><div class="risk-bar-track"><div class="risk-bar-fill" id="waterBar" style="width:38%;background:var(--risk-amber)"></div></div></div>
+<div class="risk-card-out safe" id="card6"><div class="risk-card-header"><div><div class="risk-card-title">Ski Season Viability</div></div><div class="risk-card-number" id="skiViability">72%</div></div><div class="risk-card-explain" id="skiExplain">Percentage of winters with enough natural snow to sustain a full ski season. Below 50%, resorts become economically unviable without heavy artificial snow investment.</div><div class="risk-card-meaning green" id="skiLabel">● Viable</div><div class="risk-bar-track"><div class="risk-bar-fill" id="skiBar" style="width:72%;background:var(--risk-green)"></div></div></div>
+<div class="risk-card-out safe" id="card7"><div class="risk-card-header"><div><div class="risk-card-title">Infrastructure Resilience Score</div></div><div class="risk-card-number" id="infraScore">6.2</div></div><div class="risk-card-explain" id="infraExplain">A composite score (0–10) measuring how well roads, bridges, drainage, and early-warning systems can handle extreme events. Below 4 means critical infrastructure gaps.</div><div class="risk-card-meaning green" id="infraLabel">● Adequate</div><div class="risk-bar-track"><div class="risk-bar-fill" id="infraBar" style="width:62%;background:var(--risk-green)"></div></div></div>
+<div class="risk-simulation-wrap"><div class="sim-title">Probability Distribution</div><div class="sim-explain">This curve shows 5,000 simulated futures. The peak is the most likely outcome. A wider curve means more uncertainty — the future is harder to predict.</div><div class="risk-canvas-wrap"><canvas id="riskCanvas"></canvas></div></div>
+</div></div></div></section>
+
+<section id="scholarship"><div class="scholarship-inner">
+
+<!-- Header with personal narrative -->
+<div class="scholarship-header reveal">
+<div class="section-label">03 &middot; The Fellowship</div>
+<h2 class="section-title">The Alpine Intelligence<br>Fellowship</h2>
+</div>
+
+<div class="fellowship-narrative reveal">
+<div class="fellowship-narrative-lead">Why I created this</div>
+<p>I grew up in Aosta, in the shadow of the Mont Blanc massif. Every summer I watched the Rutor glacier shrink a little more. Every winter, the ski season started a little later. Every year, a few more friends left for Milan or Turin and didn't come back.</p>
+<p>The data you explored in the Risk Engine above is not abstract to me. The 150 million cubic meters of lost water — that's the river that powered my town's economy. The -27% snow deficit — that's the season that didn't come. The youth migration rate — those are my classmates.</p>
+<p>At Ca' Foscari in Venice, I studied economics in a city that is itself sinking. At the ECB in Frankfurt, I learned how systemic risk propagates through financial networks. At PwC in Milan, I saw how businesses quantify uncertainty. Now at USC, I'm learning to build the AI and data systems that can turn these problems into solutions.</p>
+<p><strong>The Alpine Intelligence Fellowship is the bridge I wish existed when I was 18</strong> — a way for students from fragile mountain communities to gain world-class technical training and bring it home, before it's too late.</p>
+</div>
+
+<!-- What it funds - expanded cards -->
+<div class="fellowship-section-label reveal">What the Fellowship Funds</div>
+<div class="scholarship-grid">
+<div class="scholarship-card reveal">
+<div class="card-icon">🎓</div>
+<div class="card-title">Master &amp; PhD Programs</div>
+<div class="card-amount">&euro;25,000 &ndash; &euro;40,000 / year</div>
+<div class="card-desc">Full tuition + living stipend for graduate programs in AI, Climate Analytics, Risk Engineering, Computational Geoscience, or Environmental Economics at partner universities in Europe and the US.</div>
+</div>
+<div class="scholarship-card reveal">
+<div class="card-icon">🏔️</div>
+<div class="card-title">Field Research Grants</div>
+<div class="card-amount">&euro;8,000 &ndash; &euro;15,000</div>
+<div class="card-desc">Funding for on-the-ground research in Alpine and Apennine communities — glacier monitoring campaigns, soil stability analysis, hydrological sensor deployment, and economic resilience mapping with local municipalities.</div>
+</div>
+<div class="scholarship-card reveal">
+<div class="card-icon">🔬</div>
+<div class="card-title">Community Data Labs</div>
+<div class="card-amount">&euro;50,000 seed grants</div>
+<div class="card-desc">Seed funding to build open-source geospatial AI labs in partnership with regional agencies like ARPA Valle d'Aosta — creating real-time climate risk dashboards that municipal governments can actually use.</div>
+</div>
+<div class="scholarship-card reveal">
+<div class="card-icon">🤝</div>
+<div class="card-title">Return &amp; Build Program</div>
+<div class="card-amount">12-month placement</div>
+<div class="card-desc">After completing their studies, fellows return to their home region for a 12-month paid placement with a local institution — applying what they learned to real problems. The knowledge doesn't leave. It comes back.</div>
+</div>
+</div>
+
+<!-- Curriculum areas tied to the risk engine -->
+<div class="fellowship-curriculum reveal">
+<div class="fellowship-section-label">Curriculum Areas</div>
+<p class="fellowship-curriculum-desc">Each area directly connects to the variables in the Risk Engine above. The fellowship trains students to build the systems that protect mountain communities.</p>
+<div class="curriculum-grid">
+<div class="curriculum-item">
+<div class="curriculum-number">01</div>
+<div class="curriculum-content">
+<div class="curriculum-title">Machine Learning &amp; Early Warning</div>
+<div class="curriculum-link">&#8594; drives Flood &amp; Landslide Risk, Infrastructure Score</div>
+<div class="curriculum-desc">Training neural networks on satellite imagery and sensor data to predict landslides, avalanches, and flash floods 24&ndash;72 hours before they happen. Every hour of advance warning saves lives.</div>
+</div>
+</div>
+<div class="curriculum-item">
+<div class="curriculum-number">02</div>
+<div class="curriculum-content">
+<div class="curriculum-title">Financial Risk Modeling</div>
+<div class="curriculum-link">&#8594; drives Economic Distress Probability, Water Stress</div>
+<div class="curriculum-desc">Applying stochastic processes, Monte Carlo simulation, and credit risk frameworks — the same tools used by the ECB and investment banks — to price the economic impact of climate change on small mountain economies.</div>
+</div>
+</div>
+<div class="curriculum-item">
+<div class="curriculum-number">03</div>
+<div class="curriculum-content">
+<div class="curriculum-title">Geospatial AI &amp; Remote Sensing</div>
+<div class="curriculum-link">&#8594; drives Glacier Retreat Rate, Flood Risk</div>
+<div class="curriculum-desc">Using drone photogrammetry, LiDAR, and satellite data to create 3D models of glacier retreat and terrain instability — exactly like the Rutor models shown above, but at operational resolution for real decision-making.</div>
+</div>
+</div>
+<div class="curriculum-item">
+<div class="curriculum-number">04</div>
+<div class="curriculum-content">
+<div class="curriculum-title">Sustainable Tourism &amp; Economic Diversification</div>
+<div class="curriculum-link">&#8594; drives Ski Season Viability, Youth Migration, Diversification</div>
+<div class="curriculum-desc">Building data-driven strategies to transition mountain economies from snow-dependent tourism to year-round models: summer eco-tourism, remote work hubs, renewable energy, and precision agriculture.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Eligibility -->
+<div class="eligibility-section reveal">
+<div>
+<div class="eligibility-title">Who Can Apply</div>
+<div class="eligibility-list">
+<div class="eligibility-item"><div class="eligibility-dot"></div><span>Italian citizens from mountain or fragile regions: Valle d'Aosta, Trentino-Alto Adige, Piemonte montano, Appennini (Abruzzo, Molise, Basilicata), inland Sardinia, Calabria, Friuli montano</span></div>
+<div class="eligibility-item"><div class="eligibility-dot"></div><span>Undergraduate degree (or final year) in STEM, Economics, Environmental Sciences, Data Science, Geography, or Urban Planning</span></div>
+<div class="eligibility-item"><div class="eligibility-dot"></div><span>Demonstrated connection to their home community — volunteer work, local projects, family ties, or a clear vision for how they'll apply their skills back home</span></div>
+<div class="eligibility-item"><div class="eligibility-dot"></div><span>Commitment to the 12-month Return &amp; Build placement after graduation</span></div>
+</div>
+</div>
+<div>
+<div class="eligibility-title">Selection Criteria</div>
+<div class="eligibility-list">
+<div class="eligibility-item"><div class="eligibility-dot"></div><span><strong>Impact potential (40%)</strong> &mdash; How clearly can the applicant articulate the problem in their community and their plan to address it?</span></div>
+<div class="eligibility-item"><div class="eligibility-dot"></div><span><strong>Technical readiness (25%)</strong> &mdash; Does the applicant have the foundation to succeed in a rigorous quantitative program?</span></div>
+<div class="eligibility-item"><div class="eligibility-dot"></div><span><strong>Rootedness (20%)</strong> &mdash; How deep is the connection to their mountain community? Do they understand it from the inside?</span></div>
+<div class="eligibility-item"><div class="eligibility-dot"></div><span><strong>Originality (15%)</strong> &mdash; Is the proposed project genuinely new, or does it bring a fresh perspective to an existing problem?</span></div>
+</div>
+</div>
+</div>
+
+<!-- The vision -->
+<div class="fellowship-vision reveal">
+<div class="fellowship-vision-quote">&ldquo;The mountains don't need people who left and forgot. They need people who left, learned, and came back with tools.&rdquo;</div>
+<div class="fellowship-vision-credit">&mdash; The founding principle of the Alpine Intelligence Fellowship</div>
+</div>
+
+</div></section>
+
+<section id="journey"><div class="journey-inner">
+<div class="journey-header reveal"><div class="section-label">04 &middot; The Path</div><h2 class="section-title">My Journey</h2><p class="section-desc">Each stop added a new dimension — from understanding fragility firsthand to learning the systems that can protect against it.</p></div>
+<div class="journey-timeline reveal">
+<div class="timeline-line"><div class="timeline-line-glow"></div></div>
+<div class="timeline-stops">
+<div class="timeline-stop active"><div class="stop-top"><div class="stop-year">Origin</div><div class="stop-city">Aosta</div><div class="stop-org">Valle d'Aosta</div></div><div class="stop-dot-wrap"><div class="stop-dot"></div><div class="stop-dot-ping"></div></div><div class="stop-bottom"><div class="stop-keyword">Fragility</div><div class="stop-desc">Growing up under glaciers that shrink every year</div></div></div>
+<div class="timeline-stop"><div class="stop-top"><div class="stop-year">Study</div><div class="stop-city">Venezia</div><div class="stop-org">Ca' Foscari</div></div><div class="stop-dot-wrap"><div class="stop-dot"></div><div class="stop-dot-ping" style="animation-delay:0.4s"></div></div><div class="stop-bottom"><div class="stop-keyword">Culture</div><div class="stop-desc">Where beauty and vulnerability coexist</div></div></div>
+<div class="timeline-stop"><div class="stop-top"><div class="stop-year">Research</div><div class="stop-city">Frankfurt</div><div class="stop-org">ECB</div></div><div class="stop-dot-wrap"><div class="stop-dot"></div><div class="stop-dot-ping" style="animation-delay:0.8s"></div></div><div class="stop-bottom"><div class="stop-keyword">Systems</div><div class="stop-desc">Understanding how financial risk cascades</div></div></div>
+<div class="timeline-stop"><div class="stop-top"><div class="stop-year">Industry</div><div class="stop-city">Milano</div><div class="stop-org">PwC</div></div><div class="stop-dot-wrap"><div class="stop-dot"></div><div class="stop-dot-ping" style="animation-delay:1.2s"></div></div><div class="stop-bottom"><div class="stop-keyword">Innovation</div><div class="stop-desc">Applying models to real-world decisions</div></div></div>
+<div class="timeline-stop"><div class="stop-top"><div class="stop-year">Global</div><div class="stop-city">Los Angeles</div><div class="stop-org">USC</div></div><div class="stop-dot-wrap"><div class="stop-dot"></div><div class="stop-dot-ping" style="animation-delay:1.6s"></div></div><div class="stop-bottom"><div class="stop-keyword">Scale</div><div class="stop-desc">Thinking global, building for home</div></div></div>
+</div></div>
+<div class="journey-final reveal"><p class="journey-final-quote">&ldquo;Global education is not escape.<br>It is <em>amplification</em>.&rdquo;</p></div>
+</div></section>
+
+<footer><div class="footer-inner"><div class="footer-left">&copy; 2026 Andr&eacute; Ramolivaz &middot; ramoliva@usc.edu</div><div class="footer-tagline">From glaciers to global markets</div></div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// NAV
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>50));
+
+// REVEAL
+document.querySelectorAll('.reveal').forEach(el=>{
+  new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.12}).observe(el);
+});
+
+// HERO THREE.JS
+(function(){
+const c=document.getElementById('hero-canvas'),r=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+r.setSize(window.innerWidth,window.innerHeight);r.setPixelRatio(Math.min(window.devicePixelRatio,2));
+const s=new THREE.Scene(),cam=new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,100);
+cam.position.set(0,2,6);cam.lookAt(0,0,0);
+const g=new THREE.PlaneGeometry(10,10,80,80);g.rotateX(-Math.PI/2.3);
+const p=g.attributes.position,oY=new Float32Array(p.count);
+for(let i=0;i<p.count;i++){const x=p.getX(i),z=p.getZ(i),d=Math.sqrt(x*x+z*z);let h=Math.max(0,2.8-d*0.6)*Math.exp(-d*0.15)+Math.sin(x*2.5)*Math.cos(z*2.5)*0.15+Math.sin(x*5)*Math.cos(z*3)*0.06;p.setY(i,h);oY[i]=h;}
+g.computeVertexNormals();
+const mt=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x3ee8e0,wireframe:true,transparent:true,opacity:0.12}));mt.position.y=-1.5;s.add(mt);
+const gl=new THREE.LineBasicMaterial({color:0x3ee8e0,transparent:true,opacity:0.04});
+for(let i=-5;i<=5;i++){s.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(i,-1.5,-5),new THREE.Vector3(i,-1.5,5)]),gl));s.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-5,-1.5,i),new THREE.Vector3(5,-1.5,i)]),gl));}
+const pC=200,pG=new THREE.BufferGeometry(),pP=new Float32Array(pC*3),pS=new Float32Array(pC);
+for(let i=0;i<pC;i++){pP[i*3]=(Math.random()-0.5)*10;pP[i*3+1]=Math.random()*3-1;pP[i*3+2]=(Math.random()-0.5)*10;pS[i]=Math.random()*0.003+0.001;}
+pG.setAttribute('position',new THREE.BufferAttribute(pP,3));
+s.add(new THREE.Points(pG,new THREE.PointsMaterial({color:0x3ee8e0,size:0.03,transparent:true,opacity:0.5})));
+let mX=0,mY=0;document.addEventListener('mousemove',e=>{mX=(e.clientX/window.innerWidth-0.5)*2;mY=(e.clientY/window.innerHeight-0.5)*2;});
+!function a(){requestAnimationFrame(a);const t=Date.now()*0.001,po=g.attributes.position;
+for(let i=0;i<po.count;i++){const x=po.getX(i),z=po.getZ(i);po.setY(i,oY[i]+Math.sin(x*0.8+t*0.4)*Math.cos(z*0.8+t*0.3)*0.08+Math.exp(-((x-mX*3)**2+(z-mY*3)**2)*0.1)*0.15*mY);}
+po.needsUpdate=true;const pp=pG.attributes.position;for(let i=0;i<pC;i++){pp.array[i*3+1]+=pS[i];if(pp.array[i*3+1]>3)pp.array[i*3+1]=-1;}pp.needsUpdate=true;
+cam.position.x+=(mX*0.5-cam.position.x)*0.02;cam.lookAt(0,0,0);r.render(s,cam);}();
+window.addEventListener('resize',()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();r.setSize(window.innerWidth,window.innerHeight);});
+})();
+
+
+
+// 3D GLACIER COMPARISON (lightweight Three.js)
+function createGlacier3D(canvasId, glacierScale, meltFactor) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const r = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  const rect = canvas.parentElement.getBoundingClientRect();
+  r.setSize(rect.width, 280);
+  r.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x0a0c10, 0.06);
+  const cam = new THREE.PerspectiveCamera(40, rect.width/280, 0.1, 100);
+  cam.position.set(0, 3.5, 7);
+  cam.lookAt(0, 0, 0);
+
+  // Mountain terrain
+  const terrainGeo = new THREE.PlaneGeometry(12, 12, 60, 60);
+  terrainGeo.rotateX(-Math.PI/2);
+  const tp = terrainGeo.attributes.position;
+  for (let i = 0; i < tp.count; i++) {
+    const x = tp.getX(i), z = tp.getZ(i);
+    const d = Math.sqrt(x*x + z*z);
+    let h = Math.max(0, 3.2 - d*0.45) * Math.exp(-d*0.08);
+    h += Math.sin(x*1.8)*Math.cos(z*2.2)*0.2 + Math.sin(x*3.5+1)*Math.cos(z*2.8)*0.1;
+    h += Math.sin(x*0.7+z*0.9)*0.15;
+    tp.setY(i, h);
+  }
+  terrainGeo.computeVertexNormals();
+  const terrainMat = new THREE.MeshPhongMaterial({color:0x1a1f2e, flatShading:true});
+  scene.add(new THREE.Mesh(terrainGeo, terrainMat));
+
+  // Glacier ice cap
+  const iceGeo = new THREE.PlaneGeometry(8*glacierScale, 8*glacierScale, 40, 40);
+  iceGeo.rotateX(-Math.PI/2);
+  const ip = iceGeo.attributes.position;
+  for (let i = 0; i < ip.count; i++) {
+    const x = ip.getX(i), z = ip.getZ(i);
+    const d = Math.sqrt(x*x + z*z);
+    const maxR = 3.5 * glacierScale;
+    if (d > maxR) { ip.setY(i, 0); continue; }
+    let h = Math.max(0, 3.5 - d*0.5) * Math.exp(-d*0.1) * glacierScale;
+    h -= meltFactor * (0.8 + Math.sin(x*2)*0.2) * Math.max(0, 1 - d/(maxR*0.8));
+    h += Math.sin(x*2)*Math.cos(z*2.5)*0.08*glacierScale;
+    h = Math.max(0, h);
+    ip.setY(i, h + 0.05);
+  }
+  iceGeo.computeVertexNormals();
+  const iceMat = new THREE.MeshPhongMaterial({
+    color: meltFactor > 0.5 ? 0x5abfbf : 0x8eeae6,
+    transparent:true, opacity: 0.7 - meltFactor*0.2,
+    shininess:90, specular:0x3ee8e0, flatShading:true
+  });
+  const iceMesh = new THREE.Mesh(iceGeo, iceMat);
+  scene.add(iceMesh);
+
+  // Ridge lines (wireframe accent)
+  const wGeo = new THREE.PlaneGeometry(10, 10, 30, 30);
+  wGeo.rotateX(-Math.PI/2);
+  const wp = wGeo.attributes.position;
+  for (let i = 0; i < wp.count; i++) {
+    const x = wp.getX(i), z = wp.getZ(i);
+    const d = Math.sqrt(x*x + z*z);
+    let h = Math.max(0, 3.0 - d*0.45) * Math.exp(-d*0.08) + Math.sin(x*1.8)*Math.cos(z*2.2)*0.2;
+    wp.setY(i, h + 0.08);
+  }
+  scene.add(new THREE.Mesh(wGeo, new THREE.MeshBasicMaterial({color:0x3ee8e0, wireframe:true, transparent:true, opacity:0.04})));
+
+  // Water pools at base (more for melted version)
+  if (meltFactor > 0.3) {
+    const waterGeo = new THREE.CircleGeometry(1.5 + meltFactor*2, 32);
+    waterGeo.rotateX(-Math.PI/2);
+    const waterMat = new THREE.MeshPhongMaterial({color:0x3ee8e0, transparent:true, opacity:0.12+meltFactor*0.08, shininess:100});
+    const water = new THREE.Mesh(waterGeo, waterMat);
+    water.position.set(1.5, 0.02, 2);
+    scene.add(water);
+  }
+
+  // Exposed rock patches (more for melted version)
+  for (let i = 0; i < Math.floor(meltFactor*8); i++) {
+    const rockGeo = new THREE.SphereGeometry(0.15+Math.random()*0.2, 6, 4);
+    const rock = new THREE.Mesh(rockGeo, new THREE.MeshPhongMaterial({color:0x2a2f3e, flatShading:true}));
+    const angle = Math.random()*Math.PI*2, radius = 0.8+Math.random()*2;
+    rock.position.set(Math.cos(angle)*radius, 0.5+Math.random()*0.8, Math.sin(angle)*radius);
+    scene.add(rock);
+  }
+
+  // Lighting
+  scene.add(new THREE.AmbientLight(0x4a5570, 0.6));
+  const dir = new THREE.DirectionalLight(0xc8d8f0, 0.8);
+  dir.position.set(3, 5, 2);
+  scene.add(dir);
+  const rim = new THREE.DirectionalLight(0x3ee8e0, 0.2);
+  rim.position.set(-3, 2, -3);
+  scene.add(rim);
+
+  // Mouse drag rotation
+  let isDragging = false, prevX = 0, rotY = 0, targetRotY = 0;
+  canvas.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; });
+  canvas.addEventListener('touchstart', e => { isDragging = true; prevX = e.touches[0].clientX; }, {passive:true});
+  window.addEventListener('mouseup', () => isDragging = false);
+  window.addEventListener('touchend', () => isDragging = false);
+  canvas.addEventListener('mousemove', e => { if(isDragging) { targetRotY += (e.clientX - prevX)*0.005; prevX = e.clientX; }});
+  canvas.addEventListener('touchmove', e => { if(isDragging) { targetRotY += (e.touches[0].clientX - prevX)*0.005; prevX = e.touches[0].clientX; }}, {passive:true});
+
+  function animate() {
+    requestAnimationFrame(animate);
+    rotY += (targetRotY - rotY) * 0.08;
+    cam.position.x = Math.sin(rotY) * 7;
+    cam.position.z = Math.cos(rotY) * 7;
+    cam.lookAt(0, 0.5, 0);
+    // Subtle ice shimmer
+    iceMesh.rotation.y += 0.0003;
+    r.render(scene, cam);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const nr = canvas.parentElement.getBoundingClientRect();
+    r.setSize(nr.width, 280);
+    cam.aspect = nr.width/280;
+    cam.updateProjectionMatrix();
+  });
+}
+
+// Create both glaciers: past (full) and future (melted)
+setTimeout(() => {
+  createGlacier3D('glacier3d-past', 1.0, 0.0);
+  createGlacier3D('glacier3d-future', 0.55, 0.7);
+}, 200);
+
+// RISK ENGINE
+const sl={temp:document.getElementById('tempSlider'),tour:document.getElementById('tourSlider'),invest:document.getElementById('investSlider'),edu:document.getElementById('eduSlider'),age:document.getElementById('ageSlider'),div:document.getElementById('divSlider'),tech:document.getElementById('techSlider'),land:document.getElementById('landSlider')};
+const lb={temp:document.getElementById('tempVal'),tour:document.getElementById('tourVal'),invest:document.getElementById('investVal'),edu:document.getElementById('eduVal'),age:document.getElementById('ageVal'),div:document.getElementById('divVal'),tech:document.getElementById('techVal'),land:document.getElementById('landVal')};
+
+function updateRisk(){
+const te=sl.temp.value/100,to=sl.tour.value/100,inv=sl.invest.value/100,ed=sl.edu.value/100;
+const ag=sl.age.value/100,dv=sl.div.value/100,tc=sl.tech.value/100,ln=sl.land.value/100;
+const tC=(te*5).toFixed(1);lb.temp.textContent='+'+tC+'°C';lb.tour.textContent=Math.round(to*100)+'%';lb.invest.textContent='€'+(inv*10).toFixed(1)+'M';
+lb.edu.textContent=['Very Low','Low','Medium','High','Very High'][Math.min(4,Math.floor(ed*5))];
+lb.age.textContent='Median '+(35+Math.round(ag*25));
+lb.div.textContent=['Very Low','Low','Moderate','Good','Excellent'][Math.min(4,Math.floor(dv*5))];
+lb.tech.textContent=['None','Basic','Adequate','Advanced','Smart'][Math.min(4,Math.floor(tc*5))];
+lb.land.textContent=['Neglected','Poor','Moderate','Good','Excellent'][Math.min(4,Math.floor(ln*5))];
+
+let dP=5+te*55+to*25-inv*20-ed*18+ag*15-dv*15-tc*5;dP=Math.max(2,Math.min(95,dP));
+let fl=0.1+te*0.7+(1-inv)*0.2-ed*0.05-ln*0.2-tc*0.08;fl=Math.max(0.05,Math.min(0.99,fl));
+let mg=-0.5-te*8-to*3+inv*5+ed*6-ag*6+dv*4+tc*2;mg=Math.max(-15,Math.min(5,mg));
+
+// Card 1
+const dp=document.getElementById('defaultProb');dp.textContent=dP.toFixed(0)+'%';
+const dc=dP<25?'green':dP<50?'amber':'red';dp.style.color='var(--risk-'+dc+')';
+document.getElementById('defaultBar').style.width=dP+'%';document.getElementById('defaultBar').style.background='var(--risk-'+dc+')';
+const dl=document.getElementById('defaultLabel');dl.className='risk-card-meaning '+dc;
+dl.textContent=dc==='green'?'● Low risk':dc==='amber'?'⚠ Moderate risk':'⚠ High risk';
+document.getElementById('card1').className='risk-card-out '+(dc==='green'?'safe':dc==='amber'?'warning':'danger');
+const de=document.getElementById('defaultExplain');
+if(dP<15)de.textContent="The local economy is well-protected. Strong investment and education create a buffer against climate shocks.";
+else if(dP<35)de.textContent="There is roughly a 1 in "+Math.round(100/dP)+" chance the local economy enters financial difficulty within 10 years. Manageable, but watch the trends.";
+else if(dP<60)de.textContent="The risk is significant. Without intervention, more than 1 in 3 scenarios leads to economic distress. Diversification is urgent.";
+else de.textContent="Critical risk level. The community's economic model is unsustainable under these conditions. Immediate action needed.";
+
+// Card 2
+const fr=document.getElementById('floodRisk');fr.textContent=fl.toFixed(2);
+const fc=fl<0.35?'green':fl<0.65?'amber':'red';fr.style.color='var(--risk-'+fc+')';
+document.getElementById('floodBar').style.width=(fl*100)+'%';document.getElementById('floodBar').style.background='var(--risk-'+fc+')';
+const fll=document.getElementById('floodLabel');fll.className='risk-card-meaning '+fc;
+fll.textContent=fc==='green'?'● Low hazard':fc==='amber'?'⚠ Elevated':'⚠ Dangerous';
+document.getElementById('card2').className='risk-card-out '+(fc==='green'?'safe':fc==='amber'?'warning':'danger');
+const fe=document.getElementById('floodExplain');
+if(fl<0.3)fe.textContent="Hydrogeological risk is under control. Infrastructure investment is paying off.";
+else if(fl<0.55)fe.textContent="Landslides and flooding are becoming more frequent. Each degree of warming destabilizes slopes faster.";
+else if(fl<0.75)fe.textContent="Dangerous levels. Major events could happen every few years. Roads and homes are at serious risk.";
+else fe.textContent="Extreme hazard. At this temperature, catastrophic events become near-certain within a decade.";
+
+// Card 3
+const mr=document.getElementById('migrationRate');mr.textContent=mg.toFixed(1);
+const mc=mg>0?'green':mg>-5?'amber':'red';mr.style.color='var(--risk-'+mc+')';
+document.getElementById('migrationBar').style.width=Math.min(100,Math.abs(mg)*6)+'%';document.getElementById('migrationBar').style.background='var(--risk-'+mc+')';
+const ml=document.getElementById('migrationLabel');ml.className='risk-card-meaning '+mc;
+ml.textContent=mg>0?'● Growing':mg>-3?'● Stable decline':mg>-8?'⚠ Accelerating loss':'⚠ Depopulation';
+document.getElementById('card3').className='risk-card-out '+(mc==='green'?'safe':mc==='amber'?'warning':'danger');
+const me=document.getElementById('migrationExplain');
+if(mg>0)me.textContent="A rare bright spot: more people are arriving than leaving. Education and opportunity keep the community alive.";
+else if(mg>-3)me.textContent="For every 1,000 residents, about "+Math.abs(mg).toFixed(0)+" more leave than arrive each year. A slow bleed, but manageable.";
+else if(mg>-8)me.textContent="Young people are leaving faster than they can be replaced. Schools close, services shrink, the spiral accelerates.";
+else me.textContent="The community is emptying. At this rate, hospitals, schools, and emergency services cannot be sustained.";
+
+// Card 4: Glacier Retreat Rate (m/yr)
+let glacierR = 8 + te*80 - inv*5 - ed*3 - ln*8;
+glacierR = Math.max(2, Math.min(120, glacierR));
+const gr2=document.getElementById('glacierRetreat'); gr2.textContent=glacierR.toFixed(0)+' m/yr';
+const gc=glacierR<20?'green':glacierR<50?'amber':'red'; gr2.style.color='var(--risk-'+gc+')';
+document.getElementById('glacierBar').style.width=Math.min(100,glacierR)+'%'; document.getElementById('glacierBar').style.background='var(--risk-'+gc+')';
+const gll=document.getElementById('glacierLabel'); gll.className='risk-card-meaning '+gc;
+gll.textContent=gc==='green'?'● Slow retreat':gc==='amber'?'⚠ Accelerating':'⚠ Catastrophic';
+document.getElementById('card4').className='risk-card-out '+(gc==='green'?'safe':gc==='amber'?'warning':'danger');
+const ge=document.getElementById('glacierExplain');
+if(glacierR<15) ge.textContent="Glacier retreat is within historical norms. At this rate, significant ice mass will persist for several more decades.";
+else if(glacierR<40) ge.textContent="The glacier front is retreating about "+glacierR.toFixed(0)+" meters per year. Lower-altitude ice tongues could disappear within two decades.";
+else if(glacierR<70) ge.textContent="Rapid retreat. At "+glacierR.toFixed(0)+"m/year, the glacier is losing the equivalent of a football field of ice every few weeks. Meltwater floods become a real danger.";
+else ge.textContent="Catastrophic collapse. The glacier is disintegrating at "+glacierR.toFixed(0)+"m/year — this is not retreat, it's destruction. Downstream communities face immediate flood risk from glacial lake outbursts.";
+
+// Card 5: Water Stress Index (0-1)
+let ws = 0.15 + te*0.6 + to*0.15 - inv*0.12 - ed*0.05 + ag*0.08 - ln*0.1;
+ws = Math.max(0.05, Math.min(0.95, ws));
+const wse=document.getElementById('waterStress'); wse.textContent=ws.toFixed(2);
+const wc2=ws<0.3?'green':ws<0.55?'amber':'red'; wse.style.color='var(--risk-'+wc2+')';
+document.getElementById('waterBar').style.width=(ws*100)+'%'; document.getElementById('waterBar').style.background='var(--risk-'+wc2+')';
+const wsl=document.getElementById('waterLabel'); wsl.className='risk-card-meaning '+wc2;
+wsl.textContent=wc2==='green'?'● Sufficient supply':wc2==='amber'?'⚠ Moderate stress':'⚠ Severe shortage';
+document.getElementById('card5').className='risk-card-out '+(wc2==='green'?'safe':wc2==='amber'?'warning':'danger');
+const we=document.getElementById('waterExplain');
+if(ws<0.25) we.textContent="Water supply is healthy. Glacial melt and rainfall meet demand comfortably. But this balance is fragile — it depends on ice that is disappearing.";
+else if(ws<0.45) we.textContent="Demand is starting to catch up with supply. Summer peaks may see temporary pressure on drinking water and irrigation, especially in dry years.";
+else if(ws<0.65) we.textContent="Serious stress. The glaciers that once buffered summer water supply are too small to compensate. Agriculture and hydropower are directly affected.";
+else we.textContent="Critical water crisis. Without the glacier as a natural reservoir, summer water availability has collapsed. Rationing, crop failures, and conflict over resources become likely.";
+
+// Card 6: Ski Season Viability (%)
+let ski = 95 - te*70 - to*5 + inv*8 + ed*3 + dv*10 + ln*5;
+ski = Math.max(5, Math.min(98, ski));
+const ske=document.getElementById('skiViability'); ske.textContent=ski.toFixed(0)+'%';
+const sc2=ski>65?'green':ski>40?'amber':'red'; ske.style.color='var(--risk-'+sc2+')';
+document.getElementById('skiBar').style.width=ski+'%'; document.getElementById('skiBar').style.background='var(--risk-'+sc2+')';
+const skl=document.getElementById('skiLabel'); skl.className='risk-card-meaning '+sc2;
+skl.textContent=sc2==='green'?'● Viable':sc2==='amber'?'⚠ At risk':'⚠ Unviable';
+document.getElementById('card6').className='risk-card-out '+(sc2==='green'?'safe':sc2==='amber'?'warning':'danger');
+const skie=document.getElementById('skiExplain');
+if(ski>75) skie.textContent="Most winters still produce reliable natural snow. The ski economy is sustainable for now, but long-term planning should begin.";
+else if(ski>50) skie.textContent="Only "+ski.toFixed(0)+"% of winters are viable. Resorts increasingly depend on artificial snow — expensive, energy-intensive, and not always possible above +2°C.";
+else if(ski>30) skie.textContent="The ski model is breaking. Fewer than half of winters produce enough snow. Massive investment in snowmaking or a pivot to summer tourism is needed.";
+else skie.textContent="Ski tourism is functionally dead at these temperatures. Only the highest-altitude resorts survive, and even those face shortened, unpredictable seasons.";
+
+// Card 7: Infrastructure Resilience Score (0-10)
+let infra = 3 + inv*5 + ed*2.5 - te*3 - fl*2 + tc*3 + ln*1.5 - ag*1;
+infra = Math.max(0.5, Math.min(9.5, infra));
+const ife=document.getElementById('infraScore'); ife.textContent=infra.toFixed(1);
+const ic=infra>6?'green':infra>3.5?'amber':'red'; ife.style.color='var(--risk-'+ic+')';
+document.getElementById('infraBar').style.width=(infra*10)+'%'; document.getElementById('infraBar').style.background='var(--risk-'+ic+')';
+const ifl=document.getElementById('infraLabel'); ifl.className='risk-card-meaning '+ic;
+ifl.textContent=ic==='green'?'● Adequate':ic==='amber'?'⚠ Gaps':ic==='red'?'⚠ Critical':'';
+document.getElementById('card7').className='risk-card-out '+(ic==='green'?'safe':ic==='amber'?'warning':'danger');
+const ie=document.getElementById('infraExplain');
+if(infra>7) ie.textContent="Infrastructure is well-maintained. Drainage systems, monitoring sensors, early warning networks, and reinforced roads can handle most extreme events.";
+else if(infra>5) ie.textContent="Score "+infra.toFixed(1)+"/10. Basic infrastructure is functional but has blind spots. Some roads, bridges, and drainage systems are aging and underprepared for increasingly severe events.";
+else if(infra>3) ie.textContent="Significant gaps. At "+infra.toFixed(1)+"/10, critical systems are failing. Monitoring is patchy, roads are vulnerable to washouts, and emergency response times are too slow.";
+else ie.textContent="Infrastructure collapse. At "+infra.toFixed(1)+"/10, the community lacks basic protection. No early warning, crumbling roads, overwhelmed drainage. A single major event could be catastrophic.";
+
+drawDist(dP,fl);
+}
+
+Object.values(sl).forEach(s=>s.addEventListener('input',updateRisk));
+
+function drawDist(dP,fl){
+const cv=document.getElementById('riskCanvas'),cx=cv.getContext('2d'),dp=window.devicePixelRatio||1,rc=cv.parentElement.getBoundingClientRect();
+cv.width=rc.width*dp;cv.height=rc.height*dp;cv.style.width=rc.width+'px';cv.style.height=rc.height+'px';cx.scale(dp,dp);
+const w=rc.width,h=rc.height;cx.clearRect(0,0,w,h);
+const mean=dP,std=8+fl*15,bins=50,counts=new Array(bins).fill(0);
+for(let i=0;i<5000;i++){let z=Math.sqrt(-2*Math.log(Math.random()))*Math.cos(2*Math.PI*Math.random());let b=Math.floor(((mean+z*std+20)/120)*bins);if(b>=0&&b<bins)counts[b]++;}
+const mx=Math.max(...counts);
+cx.beginPath();cx.moveTo(0,h);for(let i=0;i<bins;i++)cx.lineTo((i/bins)*w,h-(counts[i]/mx)*(h-20));cx.lineTo(w,h);cx.closePath();
+const gr=cx.createLinearGradient(0,0,0,h);gr.addColorStop(0,'rgba(62,232,224,0.2)');gr.addColorStop(1,'rgba(62,232,224,0.01)');cx.fillStyle=gr;cx.fill();
+cx.beginPath();for(let i=0;i<bins;i++){const x=(i/bins)*w,y=h-(counts[i]/mx)*(h-20);i===0?cx.moveTo(x,y):cx.lineTo(x,y);}cx.strokeStyle='rgba(62,232,224,0.6)';cx.lineWidth=1.5;cx.stroke();
+const mX=((mean+20)/120)*w;cx.beginPath();cx.moveTo(mX,0);cx.lineTo(mX,h);cx.strokeStyle='rgba(255,107,61,0.5)';cx.lineWidth=1;cx.setLineDash([4,4]);cx.stroke();cx.setLineDash([]);
+cx.font='10px JetBrains Mono';cx.fillStyle='rgba(255,107,61,0.7)';cx.fillText('most likely: '+mean.toFixed(0)+'%',mX+6,14);
+cx.fillStyle='rgba(138,145,154,0.4)';cx.font='9px JetBrains Mono';cx.fillText('low risk',4,h-4);cx.fillText('high risk',w-52,h-4);
+}
+
+updateRisk();
+
+// JOURNEY
+document.querySelectorAll('.timeline-stop').forEach(s=>{
+s.addEventListener('mouseenter',()=>{document.querySelectorAll('.timeline-stop').forEach(x=>x.classList.remove('active'));s.classList.add('active');});
+});
+window.addEventListener('resize',()=>updateRisk());
+</script>
+</body>
+</html>

@@ -120,18 +120,18 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 .eligibility-item{display:flex;align-items:flex-start;gap:0.8rem;font-size:0.85rem;color:var(--text-secondary);font-weight:200;line-height:1.6}
 .eligibility-dot{width:6px;height:6px;background:var(--accent-glacier);border-radius:50%;flex-shrink:0;margin-top:0.5rem}
 
-.fellowship-narrative{max-width:750px;margin-bottom:3.5rem}
-.fellowship-narrative-lead{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:1.2rem}
-.fellowship-narrative p{font-size:0.88rem;color:var(--text-secondary);font-weight:200;line-height:1.9;margin-bottom:1rem}
-.fellowship-narrative p strong{color:var(--text-primary);font-weight:400}
+.Scholarship-narrative{max-width:750px;margin-bottom:3.5rem}
+.Scholarship-narrative-lead{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:1.2rem}
+.Scholarship-narrative p{font-size:0.88rem;color:var(--text-secondary);font-weight:200;line-height:1.9;margin-bottom:1rem}
+.Scholarship-narrative p strong{color:var(--text-primary);font-weight:400}
 
-.fellowship-section-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:1.5rem}
+.Scholarship-section-label{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent-glacier);margin-bottom:1.5rem}
 
 .scholarship-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:3.5rem}
 .card-amount{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--accent-glacier);margin-bottom:0.6rem;letter-spacing:0.5px}
 
-.fellowship-curriculum{margin-bottom:3.5rem}
-.fellowship-curriculum-desc{font-size:0.85rem;color:var(--text-secondary);font-weight:200;line-height:1.7;max-width:600px;margin-bottom:2rem}
+.Scholarship-curriculum{margin-bottom:3.5rem}
+.Scholarship-curriculum-desc{font-size:0.85rem;color:var(--text-secondary);font-weight:200;line-height:1.7;max-width:600px;margin-bottom:2rem}
 .curriculum-grid{display:flex;flex-direction:column;gap:1px;background:rgba(62,232,224,0.06);border:1px solid rgba(62,232,224,0.08);border-radius:2px;overflow:hidden}
 .curriculum-item{display:flex;gap:1.5rem;padding:1.5rem 1.8rem;background:var(--bg-card);transition:background 0.3s}
 .curriculum-item:hover{background:rgba(21,25,32,0.95)}
@@ -143,9 +143,9 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3)}
 
 .eligibility-item strong{color:var(--text-primary);font-weight:400}
 
-.fellowship-vision{text-align:center;padding:4rem 2rem;margin-top:3.5rem;border-top:1px solid rgba(62,232,224,0.06);border-bottom:1px solid rgba(62,232,224,0.06)}
-.fellowship-vision-quote{font-family:'Instrument Serif',serif;font-size:clamp(1.1rem,2vw,1.5rem);font-style:italic;color:var(--text-primary);line-height:1.7;max-width:650px;margin:0 auto 1rem}
-.fellowship-vision-credit{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
+.Scholarship-vision{text-align:center;padding:4rem 2rem;margin-top:3.5rem;border-top:1px solid rgba(62,232,224,0.06);border-bottom:1px solid rgba(62,232,224,0.06)}
+.Scholarship-vision-quote{font-family:'Instrument Serif',serif;font-size:clamp(1.1rem,2vw,1.5rem);font-style:italic;color:var(--text-primary);line-height:1.7;max-width:650px;margin:0 auto 1rem}
+.Scholarship-vision-credit{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--text-dim);text-transform:uppercase}
 
 #journey{padding:8rem 3rem;background:var(--bg-surface);border-top:1px solid rgba(62,232,224,0.06)}
 .journey-inner{max-width:1100px;margin:0 auto}.journey-header{margin-bottom:4rem}
@@ -189,7 +189,7 @@ footer{padding:4rem 3rem;border-top:1px solid rgba(62,232,224,0.06);background:v
 </style>
 </head>
 <body>
-<nav id="mainNav"><div class="nav-logo">Andr&eacute; Ramolivaz</div><div class="nav-links"><a href="#risk-engine">Risk Engine</a><a href="my-story.html">Story ✦</a><a href="#scholarship">Fellowship</a><a href="#journey">Journey</a><a href="mailto:ramoliva@usc.edu">Contact</a></div></nav>
+<nav id="mainNav"><div class="nav-logo">Andr&eacute; Ramolivaz</div><div class="nav-links"><a href="#risk-engine">Risk Engine</a><a href="my-story.html">Story ✦</a><a href="#scholarship">Scholarship</a><a href="#journey">Journey</a><a href="mailto:ramoliva@usc.edu">Contact</a></div></nav>
 
 <section id="hero">
 <canvas id="hero-canvas"></canvas>
@@ -303,20 +303,20 @@ footer{padding:4rem 3rem;border-top:1px solid rgba(62,232,224,0.06);background:v
 
 <!-- Header with personal narrative -->
 <div class="scholarship-header reveal">
-<div class="section-label">03 &middot; The Fellowship</div>
-<h2 class="section-title">The Alpine Intelligence<br>Fellowship</h2>
+<div class="section-label">03 &middot; The Scholarship</div>
+<h2 class="section-title">The Alpine Intelligence<br>Scholarship</h2>
 </div>
 
-<div class="fellowship-narrative reveal">
-<div class="fellowship-narrative-lead">Why I created this</div>
+<div class="Scholarship-narrative reveal">
+<div class="Scholarship-narrative-lead">Why I created this</div>
 <p>I grew up in Aosta, in the shadow of the Mont Blanc massif. Every summer I watched the Rutor glacier shrink a little more. Every winter, the ski season started a little later. Every year, a few more friends left for Milan or Turin and didn't come back.</p>
 <p>The data you explored in the Risk Engine above is not abstract to me. The 150 million cubic meters of lost water — that's the river that powered my town's economy. The -27% snow deficit — that's the season that didn't come. The youth migration rate — those are my classmates.</p>
 <p>At Ca' Foscari in Venice, I studied economics in a city that is itself sinking. At the ECB in Frankfurt, I learned how systemic risk propagates through financial networks. At PwC in Milan, I saw how businesses quantify uncertainty. Now at USC, I'm learning to build the AI and data systems that can turn these problems into solutions.</p>
-<p><strong>The Alpine Intelligence Fellowship is the bridge I wish existed when I was 18</strong> — a way for students from fragile mountain communities to gain world-class technical training and bring it home, before it's too late.</p>
+<p><strong>The Alpine Intelligence Scholarship is the bridge I wish existed when I was 18</strong> — a way for students from fragile mountain communities to gain world-class technical training and bring it home, before it's too late.</p>
 </div>
 
 <!-- What it funds - expanded cards -->
-<div class="fellowship-section-label reveal">What the Fellowship Funds</div>
+<div class="Scholarship-section-label reveal">What the Scholarship Funds</div>
 <div class="scholarship-grid">
 <div class="scholarship-card reveal">
 <div class="card-icon">🎓</div>
@@ -345,9 +345,9 @@ footer{padding:4rem 3rem;border-top:1px solid rgba(62,232,224,0.06);background:v
 </div>
 
 <!-- Curriculum areas tied to the risk engine -->
-<div class="fellowship-curriculum reveal">
-<div class="fellowship-section-label">Curriculum Areas</div>
-<p class="fellowship-curriculum-desc">Each area directly connects to the variables in the Risk Engine above. The fellowship trains students to build the systems that protect mountain communities.</p>
+<div class="Scholarship-curriculum reveal">
+<div class="Scholarship-section-label">Curriculum Areas</div>
+<p class="Scholarship-curriculum-desc">Each area directly connects to the variables in the Risk Engine above. The Scholarship trains students to build the systems that protect mountain communities.</p>
 <div class="curriculum-grid">
 <div class="curriculum-item">
 <div class="curriculum-number">01</div>
@@ -407,9 +407,9 @@ footer{padding:4rem 3rem;border-top:1px solid rgba(62,232,224,0.06);background:v
 </div>
 
 <!-- The vision -->
-<div class="fellowship-vision reveal">
-<div class="fellowship-vision-quote">&ldquo;The mountains don't need people who left and forgot. They need people who left, learned, and came back with tools.&rdquo;</div>
-<div class="fellowship-vision-credit">&mdash; The founding principle of the Alpine Intelligence Fellowship</div>
+<div class="Scholarship-vision reveal">
+<div class="Scholarship-vision-quote">&ldquo;The mountains don't need people who left and forgot. They need people who left, learned, and came back with tools.&rdquo;</div>
+<div class="Scholarship-vision-credit">&mdash; The founding principle of the Alpine Intelligence Scholarship</div>
 </div>
 
 </div></section>
